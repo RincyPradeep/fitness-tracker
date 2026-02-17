@@ -2,14 +2,15 @@
 
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *))
+/* For Tailwind v3 */
+/* @variant dark(&:where(.dark, .dark *)) */
 
 *{
   font-family: "Outfit", sans-serif;
 }
 
 body{
-  @apply dark:bg-slate-950;
+  @apply dark:bg-slate-950 dark:text-white;
 }
 
 
