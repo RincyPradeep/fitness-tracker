@@ -1,15 +1,17 @@
 import { ArrowLeft, ArrowRight, PersonStanding, ScalingIcon, Target, User } from "lucide-react"
-import { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast"
 import { useAppContext } from "../context/AppContext"
 import { useState } from "react"
 import type { ProfileFormData } from "../types"
 import Input from "../components/ui/Input"
 import Button from "../components/ui/Button"
+import mockApi from "../assets/mockApi"
+import { ageRanges, goalOptions } from "../assets/assets"
 
 
 const Onboarding = () => {
 
-  const [step, setStep] = useState(3)
+  const [step, setStep] = useState(1)
   const {user, setOnboardingCompleted, fetchUser} = useAppContext()
   const [formData, setFormData] = useState<ProfileFormData>({
     age: 0,
@@ -27,7 +29,27 @@ const Onboarding = () => {
   }
 
   const handleNext = async()=>{
-
+    if(step === 1){
+      if(!formData.age || Number(formData.age) < 13 || Number(formData.age) > 120){
+        return toast("Age is required")
+      }
+    }
+    if(step < totalSteps){
+      setStep(step + 1)
+    }else{
+      const userData = {
+        ...formData,
+        age: formData.age,
+        weight: formData.weight,
+        height: formData.height ? formData.height : null,
+        createdAt: new Date().toISOString()
+      }
+      localStorage.setItem('fitnessUser',JSON.stringify(userData))
+      await mockApi.user.update(user?.id || "", userData as unknown as Partial<UserData>)
+      toast.success("Profile updated successfully")
+      setOnboardingCompleted(true)
+      fetchUser(user?.token || "")
+    }
   }
 
   return (
@@ -134,6 +156,47 @@ const Onboarding = () => {
                     </div>
                   </div>
                   
+                  {/* Options */}
+                  <div className="space-y-4 max-w-lg">
+                    {
+                      goalOptions.map((option)=>(
+                        <button
+                          key={option.value}
+                          onClick ={()=>{
+                            const age = Number(formData.age)
+                            const range = ageRanges.find((r)=>age <= r.max) || ageRanges[ageRanges.length - 1]
+
+                            let intake = range.maintain;
+                            let burn = range.burn;
+                            
+                            if(option.value === 'lose'){
+                              intake -= 400;
+                              burn += 100;
+                            }else if(option.value === 'gain'){
+                              intake += 400;
+                              burn -= 100;
+                            }
+                            setFormData({
+                              ...formData,
+                              goal: option.value as 'lose' | 'maintain' | 'gain',
+                              dailyCalorieIntake: intake,
+                              dailyCalorieBurn: burn,
+                            })
+                          }}
+                          className={`onboarding-option-btn ${formData.goal === option.value && 'ring-2 ring-emerald-500'}`}
+                        >
+                          <span className="text-base text-slate-700 dark:text-slate-200">{option.label}</span>
+                        </button>
+                      ))
+                    }
+                  </div>
+
+                  <div className="border-t border-slate-200 dark:border-slate-700 my-6 max-w-lg"></div>
+                  
+                  {/* Daily Targets */}
+                  <div className="space-y-8 max-w-lg">
+                    <h3 className="text-md font-medium text-slate-800 dark:text-white mb-4">Daily Targets</h3>
+                  </div>
                 </div>
               )
             }
