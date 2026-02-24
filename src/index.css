@@ -2,8 +2,8 @@
 
 @import "tailwindcss";
 
-/* For Tailwind v3 */
-/* @variant dark(&:where(.dark, .dark *)) */
+/* Enable dark mode using class */
+@custom-variant dark (&:where(.dark, .dark *));
 
 *{
   font-family: "Outfit", sans-serif;

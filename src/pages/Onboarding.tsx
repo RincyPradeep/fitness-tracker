@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight, PersonStanding, ScalingIcon, Target, User } from
 import toast, { Toaster } from "react-hot-toast"
 import { useAppContext } from "../context/AppContext"
 import { useState } from "react"
-import type { ProfileFormData } from "../types"
+import type { ProfileFormData, UserData } from "../types"
 import Input from "../components/ui/Input"
 import Button from "../components/ui/Button"
 import mockApi from "../assets/mockApi"
