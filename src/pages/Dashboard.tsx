@@ -5,6 +5,7 @@ import type { ActivityEntry, FoodEntry } from "../types"
 import Card from "../components/ui/Card"
 import ProgressBar from "../components/ui/ProgressBar"
 import { Activity, FlameIcon, HamburgerIcon, Ruler, ScaleIcon, TrendingUpIcon, ZapIcon } from "lucide-react"
+import CaloriesChart from "../components/CaloriesChart"
 
 
 const Dashboard = () => {
@@ -219,8 +220,16 @@ const Dashboard = () => {
                       </div>
 
                       {/* BMI Scale Visual */}
-                      <div>
-                        
+                      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
+                        <div className="flex-1 bg-blue-400 opacity-30"></div>
+                        <div className="flex-1 bg-emerald-400 opacity-30"></div>
+                        <div className="flex-1 bg-orange-400 opacity-30"></div>
+                        <div className="flex-1 bg-red-400 opacity-30"></div>
+                      </div>
+                      <div className="flex justify-between mt-1 text-[10px] text-slate-400">
+                          <span>18.5</span>
+                          <span>25</span>
+                          <span>30</span>
                       </div>
                     </div>
                   )
@@ -229,6 +238,31 @@ const Dashboard = () => {
             </Card>
           )
         }
+
+        {/* Quick Summary */}
+        <Card>
+          <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Today's Summary</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
+              <span className="text-slate-500 dark:text-slate-400">Meals logged</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200">{todayFood.length}</span>
+            </div>
+            <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
+              <span className="text-slate-500 dark:text-slate-400">Total calories</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200">{totalCalories} kcal</span>
+            </div>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-slate-500 dark:text-slate-400">Active Time</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200">{totalActiveMinutes} min</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Activity & Intake Graph */}
+        <Card className="col-span-2">
+          <h3 className="font-semibold text-slate-800 dark:text-white mb-2">This Week's Progress</h3>
+          <CaloriesChart />
+        </Card>
       </div>
     </div>
   )
